@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  title: DGA Data Access API
+  description: >
+    Endpoints to access the contracts, tenants and units data
+  version: 1.0.0
+
+servers:
+  - url: 'https://document-generation-api.development.aws.akelius.com'
+    description: in development env
+
+paths:
+  /contract-tenant:
+    post:
+      tags:
+        - contract-tenant
+      summary: Get contract and tenant info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractTenantRequest'
+      responses:
+        '200':
+          description: OK (successfully fetched)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractTenant'
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    ContractTenantRequest:
+      title: ContractTenantRequest
+      type: object
+      properties:
+        country:
+          type: string
+          enum: [CA, DK, FR, DE, SE, GB, US]
+          example: "DE"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        branches:
+          type: array
+          items:
+            type: string
+            maxItems: 10
+          example: ["accounting", "financial"]
+        unitTypes:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/UnitType"
+          example: ["APARTMENT", "COMMERCIAL_UNIT"]
+        tenantTypes:
+          type: array
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/TenantType'
+          example: ["TENANT"]
+        contractStatuses:
+          type: array
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/ContractStatus'
+          example: ["ACTIVE", "FUTURE"]
+        contractNumber:
+          type: string
+          example: "7515000101"
+        tenantName:
+          type: string
+          example: "John Doe"
+        profitCenter:
+          type: string
+          example: "10559"
+        cityManagerAreas:
+          type: array
+          items:
+            type: string
+            maxItems: 10
+          example: ["big", "small"]
+        page:
+          type: integer
+          minimum: 0
+          maximum: 32767
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 32767
+      required:
+        - country
+
+    ContractTenant:
+      title: ContractTenant
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: morning@earth.com
+        tenantId:
+          type: string
+          format: uuid
+          example: 101f0b51-ae8a-409e-8e17-84da85ba07f1
+        profitCenter:
+          type: string
+          example: 6317
+        unitNumber:
+          type: string
+          example: 6317_B31
+        name:
+          type: string
+          example: Lacie
+        tenantType:
+          $ref: '#/components/schemas/TenantType'
+        contractNumber:
+          type: string
+          example: 7515000101
+        contractStatus:
+          $ref: '#/components/schemas/ContractStatus'
+
+    UnitType:
+      title: UnitType
+      type: string
+      example: "APARTMENT"
+      enum:
+        - APARTMENT
+        - COMMERCIAL_UNIT
+        - ANTENNA
+        - BILLBOARD
+        - PARKING_SPACE
+        - PARKING
+        - RENTABLE_STORAGE
+        - GARDEN
+
+    TenantType:
+      title: TenantType
+      type: string
+      example: "TENANT"
+      enum:
+        - "DIVERGENT_CORRESPONDENCE_PARTNER"
+        - "DIVERGENT_ACCOUNT_HOLDER"
+        - "DIVERGENT_CORRESPONDENT"
+        - "CARE_TAKER"
+        - "AUTHORIZED_REPRESENTATIVE"
+        - "GUARANTOR"
+        - "FORMER_GUARANTOR"
+        - "FORMER_TENANT"
+        - "FORMER_LODGER"
+        - "FORMER_APARTMENT_USER"
+        - "HEIR"
+        - "BAIL_DONOR"
+        - "CHILD_OR_PARENT_IN_HOUSEHOLD"
+        - "COHABITANT"
+        - "TENANT"
+        - "CURATOR_OF_THE_ESTATE"
+        - "USUFRUCT"
+        - "EMERGENCY_CONTACT"
+        - "OWNER_OF_ESTATE"
+        - "LODGER"
+        - "DECEASED"
+        - "ADDITIONAL_ADDRESS"
+        - "ADDITIONAL_CORRESPONDENT"
+        - "ADDITIONAL_TENANT"
+        - "APARTMENT_USER"
+        - "CORRESPONDENT"
+        - "RENT_PAYER"
+        - "ADDITIONAL_RENT_PAYER"
+        - "SPOUSE"
+        - "UNSPECIFIED"
+        - "UNKNOWN"
+
+    ContractStatus:
+      title: ContractStatus
+      type: string
+      example: "ACTIVE"
+      enum:
+        - "ACTIVE"
+        - "PAST"
+        - "FUTURE"
+        - "EVICTION"
+        - "NOTICE"
+        - "VACANT"
+        - "APPLICANT"
+        - "CANCELED"
+        - "WAIT_LIST"
+        - "DENIED"
+        - "PROPOSAL"

@@ -1,0 +1,70 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "org.openapi.generator" version "4.3.1"
+	id 'java'
+}
+
+group = 'com.akelius.openapi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+tasks {
+	compileJava {
+		dependsOn(tasks.openApiGenerate)
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs 'build/generated-sources/src/main/java'
+		}
+	}
+}
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$projectDir/src/main/resources/public/data-access-api.yaml".toString()
+	outputDir = "$buildDir/generated-sources".toString()
+	templateDir = "$projectDir/src/main/resources/templates.JavaSpring".toString()
+	apiPackage = "com.akelius.openapi.demo.controller"
+	invokerPackage = "com.akelius.openapi.demo.controller"
+	modelPackage = "com.akelius.openapi.demo.model"
+	modelNameSuffix = "Dto"
+	configOptions = [
+		reactive            : "true",
+		dateLibrary         : "java8",
+		interfaceOnly       : "true",
+		skipDefaultInterface: "true"
+	]
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation "io.springfox:springfox-boot-starter:3.0.0"
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.5.9'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+test {
+	useJUnitPlatform()
+}
