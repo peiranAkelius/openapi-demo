@@ -1,0 +1,19 @@
+#=========================================================================================
+# Docker compose file to start the swagger editor in localhost
+#   To start the service:
+#       'docker-compose up --build -d'
+#   To end the service:
+#       'docker-compose down'
+#
+#   Use simple version if your docker compose does not work:
+#   docker pull swaggerapi/swagger-editor
+#   docker run -d -p 3180:8080 swaggerapi/swagger-editor
+#=========================================================================================
+version: "3.7"
+
+services:
+  swagger_editor:
+    image: swaggerapi/swagger-editor
+    container_name: swagger_editor
+    ports:
+      - 3180:8080

@@ -33,6 +33,13 @@ sourceSets {
 	}
 }
 
+// public the API swagger file
+//bootJar {
+//	from('../data-access/src/main/resources/public') {
+//		into 'public'
+//	}
+//}
+
 openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "$projectDir/src/main/resources/public/data-access-api.yaml".toString()

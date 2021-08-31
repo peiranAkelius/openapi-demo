@@ -1,0 +1,9 @@
+# swagger-ui
+springdoc:
+  api-docs:
+    path: /v1/docs/v3
+  swagger-ui:
+    urls:
+      - name: data-access-api
+        url: /data-access-api.yaml
+    path: /v1/docs/swagger-ui.html
